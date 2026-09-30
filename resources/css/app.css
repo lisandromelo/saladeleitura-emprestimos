@@ -1,0 +1,36 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.js';
+@source '../**/*.vue';
+
+@theme {
+    --font-sans: 'Source Sans 3', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Source Sans 3', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --color-brand: var(--brand-primary, #006d5b);
+    --color-brand-dark: var(--brand-primary-dark, #005546);
+    --color-muted: var(--brand-secondary, #929497);
+    --color-paper: var(--brand-paper, #f5faf8);
+    --color-ink: var(--brand-ink, #1f2933);
+    --color-ok: var(--brand-ok, #2f6b4f);
+    --color-warn: var(--brand-warn, #9a3412);
+}
+
+:root {
+    --brand-primary: #006d5b;
+    --brand-primary-dark: #005546;
+    --brand-secondary: #929497;
+    --brand-paper: #f5faf8;
+    --brand-ink: #1f2933;
+    --brand-ok: #2f6b4f;
+    --brand-warn: #9a3412;
+}
+
+body {
+    background:
+        radial-gradient(ellipse at top left, color-mix(in srgb, var(--brand-primary) 10%, transparent), transparent 45%),
+        linear-gradient(180deg, #ffffff 0%, var(--brand-paper) 55%, color-mix(in srgb, var(--brand-primary) 6%, white) 100%);
+    color: var(--brand-ink);
+    font-family: var(--font-sans);
+}
