@@ -11,6 +11,10 @@ const form = useForm({
     quantidade: 10,
 });
 
+const escolha = useForm({
+    url: '',
+});
+
 function processar() {
     form.post('/livros/capas/atualizar');
 }
@@ -22,12 +26,22 @@ function limparFalhas() {
     router.post('/livros/capas/limpar-falhas');
 }
 
+function usarCapa(livroId, url) {
+    escolha.url = url;
+    escolha.post(`/livros/${livroId}/capa`, { preserveScroll: true });
+}
+
+function descartar(livroId) {
+    router.post(`/livros/${livroId}/capa/descartar`, {}, { preserveScroll: true });
+}
+
 function rotuloStatus(status) {
     return {
         encontrada: 'Capa encontrada',
         nao_encontrada: 'Sem capa',
         erro: 'Erro',
         quota: 'Quota da API',
+        escolher: 'Escolher capa',
     }[status] || status;
 }
 </script>
@@ -83,8 +97,8 @@ function rotuloStatus(status) {
                 >
             </label>
             <p class="text-xs text-muted">
-                Processa apenas livros sem capa e sem marcação de busca malsucedida (máx. 50 por vez).
-                Pode demorar alguns minutos.
+                Consulta Google Books, Open Library e, como terceira fonte, o Internet Archive.
+                Com uma só capa, ela é aplicada. Com mais de uma, o operador escolhe.
             </p>
             <div class="flex flex-wrap gap-2">
                 <button class="rounded-md bg-brand px-4 py-2 text-sm text-white" :disabled="form.processing || stats.pendentes_busca === 0">
@@ -100,6 +114,38 @@ function rotuloStatus(status) {
                 </button>
             </div>
         </form>
+
+        <div v-if="ultimo_resultado?.detalhes?.some((item) => item.status === 'escolher')" class="mb-8 space-y-4">
+            <h2 class="text-lg font-semibold">Escolha a capa</h2>
+            <article
+                v-for="item in ultimo_resultado.detalhes.filter((entrada) => entrada.status === 'escolher')"
+                :key="item.id"
+                class="rounded-lg border border-stone-200 bg-white/70 p-4"
+            >
+                <p class="font-medium text-ink">{{ item.titulo }} <span class="text-sm text-muted">({{ item.codigo }})</span></p>
+                <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                    <button
+                        v-for="(opcao, idx) in item.opcoes"
+                        :key="`${item.id}-${idx}`"
+                        type="button"
+                        class="rounded border border-stone-200 bg-white p-2 text-left hover:border-brand disabled:opacity-60"
+                        :disabled="escolha.processing"
+                        @click="usarCapa(item.id, opcao.url)"
+                    >
+                        <img :src="opcao.thumbnail" :alt="opcao.titulo" class="mb-2 h-32 w-full object-contain">
+                        <p class="line-clamp-2 text-xs font-medium">{{ opcao.titulo }}</p>
+                        <p class="line-clamp-1 text-[11px] text-muted">{{ opcao.fonte }}</p>
+                    </button>
+                </div>
+                <button
+                    type="button"
+                    class="mt-3 text-xs text-warn hover:underline"
+                    @click="descartar(item.id)"
+                >
+                    Nenhuma destas
+                </button>
+            </article>
+        </div>
 
         <div v-if="ultimo_resultado?.detalhes?.length">
             <h2 class="mb-3 text-lg font-semibold">Última execução</h2>

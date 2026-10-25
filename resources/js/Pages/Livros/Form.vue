@@ -101,7 +101,7 @@ async function escolherCapa(item) {
                 'X-CSRF-TOKEN': csrfToken(),
             },
             credentials: 'same-origin',
-            body: JSON.stringify({ url: item.thumbnail }),
+            body: JSON.stringify({ url: item.url || item.thumbnail }),
         });
 
         const data = await response.json();
@@ -219,7 +219,7 @@ function submit() {
                         >
                             <img :src="item.thumbnail" :alt="item.titulo" class="mb-2 h-28 w-full object-contain">
                             <p class="line-clamp-2 text-xs font-medium">{{ item.titulo }}</p>
-                            <p class="line-clamp-1 text-[11px] text-muted">{{ item.autores || item.fonte }}</p>
+                            <p class="line-clamp-1 text-[11px] text-muted">{{ item.fonte }}</p>
                         </button>
                     </div>
                 </div>

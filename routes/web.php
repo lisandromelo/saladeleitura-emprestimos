@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AtualizarCapasController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AssociadoController;
 use App\Http\Controllers\AtrasoController;
+use App\Http\Controllers\AtualizarCapasController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BalancoController;
 use App\Http\Controllers\ClassificacaoController;
@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/livros/capas/atualizar', [AtualizarCapasController::class, 'index'])->middleware('admin')->name('livros.capas.atualizar');
     Route::post('/livros/capas/atualizar', [AtualizarCapasController::class, 'processar'])->middleware('admin')->name('livros.capas.processar');
     Route::post('/livros/capas/limpar-falhas', [AtualizarCapasController::class, 'limparFalhas'])->middleware('admin')->name('livros.capas.limpar-falhas');
+    Route::post('/livros/{livro}/capa', [AtualizarCapasController::class, 'aplicar'])->middleware('admin')->name('livros.capa.aplicar');
+    Route::post('/livros/{livro}/capa/descartar', [AtualizarCapasController::class, 'descartar'])->middleware('admin')->name('livros.capa.descartar');
     Route::get('/livros/{livro}', [LivroController::class, 'show'])->name('livros.show');
     Route::get('/livros/{livro}/editar', [LivroController::class, 'edit'])->middleware('admin')->name('livros.edit');
     Route::put('/livros/{livro}', [LivroController::class, 'update'])->middleware('admin')->name('livros.update');
