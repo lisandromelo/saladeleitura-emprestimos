@@ -39,7 +39,7 @@ function logout() {
 
 <template>
     <BrandTheme>
-        <div class="min-h-screen bg-paper text-ink">
+        <div class="min-h-screen bg-stone-50 text-stone-900">
             <div v-if="mobileMenuOpen" class="fixed inset-0 z-40 bg-stone-950/40 lg:hidden" aria-hidden="true" @click="mobileMenuOpen = false" />
             <aside
                 class="fixed inset-y-0 left-0 z-50 flex flex-col border-r border-brand/15 bg-white shadow-xl transition-all duration-200 lg:translate-x-0"
@@ -57,17 +57,17 @@ function logout() {
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
                     </button>
                 </div>
-                <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-sm" aria-label="Navegação principal">
-                    <p v-if="sidebarOpen" class="px-3 pb-2 text-xs font-semibold uppercase tracking-wider text-muted">Menu principal</p>
+                <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-base" aria-label="Navegação principal">
+                    <p v-if="sidebarOpen" class="px-3 pb-2 text-sm font-bold uppercase tracking-wider text-stone-700">Menu principal</p>
                     <Link v-for="link in mainLinks" :key="link.href" :href="link.href" :title="!sidebarOpen ? link.label : undefined"
-                        class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition"
-                        :class="isActive(link) ? 'bg-brand/10 font-semibold text-brand ring-1 ring-inset ring-brand/15' : 'text-ink/80 hover:bg-brand/5 hover:text-brand'"
+                        class="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 transition"
+                        :class="isActive(link) ? 'bg-brand/10 font-semibold text-brand ring-1 ring-inset ring-brand/15' : 'text-stone-800 hover:bg-emerald-50 hover:text-emerald-900'"
                         :aria-current="isActive(link) ? 'page' : undefined" @click="mobileMenuOpen = false">
                         <span class="w-5 shrink-0 text-center" aria-hidden="true">{{ link.icon }}</span>
                         <span v-if="sidebarOpen" class="truncate">{{ link.label }}</span>
                     </Link>
                     <template v-if="isAdmin">
-                        <p v-if="sidebarOpen" class="px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-wider text-muted">Administração</p>
+                        <p v-if="sidebarOpen" class="px-3 pb-2 pt-6 text-sm font-bold uppercase tracking-wider text-stone-700">Administração</p>
                         <Link v-for="link in adminLinks" :key="link.href" :href="link.href" :title="!sidebarOpen ? link.label : undefined"
                             class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition"
                             :class="isActive(link) ? 'bg-brand/10 font-semibold text-brand ring-1 ring-inset ring-brand/15' : 'text-ink/80 hover:bg-brand/5 hover:text-brand'"
@@ -78,7 +78,7 @@ function logout() {
                     </template>
                 </nav>
                 <div class="border-t border-brand/10 p-3">
-                    <div v-if="sidebarOpen" class="truncate px-3 pb-2 text-xs text-muted">{{ user?.name }}</div>
+                    <div v-if="sidebarOpen" class="truncate px-3 pb-2 text-sm text-stone-700">{{ user?.name }}</div>
                     <button type="button" class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-stone-600 transition hover:bg-rose-50 hover:text-rose-700" :title="!sidebarOpen ? 'Sair' : undefined" @click="logout">
                         <span class="w-5 shrink-0 text-center" aria-hidden="true">↪</span><span v-if="sidebarOpen">Sair</span>
                     </button>
@@ -91,15 +91,15 @@ function logout() {
                     </button>
                     <div class="min-w-0 flex-1">
                         <p class="truncate text-sm font-semibold text-brand">{{ branding.name }}</p>
-                        <p class="hidden truncate text-xs text-muted sm:block">{{ mainLinks.find(link => isActive(link))?.label || adminLinks.find(link => isActive(link))?.label || '' }}</p>
+                        <p class="hidden truncate text-sm text-stone-700 sm:block">{{ mainLinks.find(link => isActive(link))?.label || adminLinks.find(link => isActive(link))?.label || '' }}</p>
                     </div>
                     <span class="hidden max-w-48 truncate rounded-md bg-brand/8 px-3 py-1.5 text-sm font-medium text-brand sm:block">{{ user?.name }}</span>
                     <button type="button" class="rounded-md border border-stone-200 bg-white px-3 py-1.5 text-sm text-stone-600 transition hover:border-brand/30 hover:text-brand sm:hidden" @click="logout">Sair</button>
                 </header>
                 <div class="h-0.5 bg-gradient-to-r from-brand via-brand/70 to-brand/20" aria-hidden="true" />
-                <div v-if="flash.success" class="mx-auto mt-4 max-w-6xl px-4 sm:px-6"><p class="rounded-md bg-emerald-50 px-3 py-2 text-sm text-ok">{{ flash.success }}</p></div>
-                <div v-if="flash.error" class="mx-auto mt-4 max-w-6xl px-4 sm:px-6"><p class="rounded-md bg-rose-50 px-3 py-2 text-sm text-warn">{{ flash.error }}</p></div>
-                <div v-if="flash.warning" class="mx-auto mt-4 max-w-6xl px-4 sm:px-6"><p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">{{ flash.warning }}</p></div>
+                <div v-if="flash.success" class="mx-auto mt-4 max-w-6xl px-4 sm:px-6"><p class="rounded-md bg-emerald-50 px-3 py-3 text-base font-medium text-emerald-900">{{ flash.success }}</p></div>
+                <div v-if="flash.error" class="mx-auto mt-4 max-w-6xl px-4 sm:px-6"><p class="rounded-md bg-rose-50 px-3 py-3 text-base font-medium text-rose-900">{{ flash.error }}</p></div>
+                <div v-if="flash.warning" class="mx-auto mt-4 max-w-6xl px-4 sm:px-6"><p class="rounded-md bg-amber-50 px-3 py-3 text-base font-medium text-amber-900">{{ flash.warning }}</p></div>
                 <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8"><slot /></main>
             </div>
         </div>
