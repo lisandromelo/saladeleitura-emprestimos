@@ -31,7 +31,7 @@ function fmt(iso) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="b in balancos.data" :key="b.id" class="border-t border-stone-100">
+                    <tr v-for="b in balancos.data" :key="b.id" class="border-t border-stone-200 odd:bg-white even:bg-stone-50 hover:bg-emerald-50/60">
                         <td class="px-3 py-2">
                             <Link :href="`/balancos/${b.id}`" class="text-brand hover:underline">{{ fmt(b.data_hora) }}</Link>
                         </td>
