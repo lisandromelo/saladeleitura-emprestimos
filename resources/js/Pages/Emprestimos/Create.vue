@@ -85,10 +85,26 @@ function buscarAssociado() {
 
 function escolherLivro(item) {
     aplicarLivro(item);
+    if (props.busca?.tipo === 'livro') {
+        router.get('/emprestimos/buscar', {
+            tipo: 'livro',
+            q: '',
+            associado_id: form.associado_id || undefined,
+            livro_id: item.id,
+        }, { preserveState: true, preserveScroll: true, replace: true });
+    }
 }
 
 function escolherAssociado(item) {
     aplicarAssociado(item);
+    if (props.busca?.tipo === 'associado') {
+        router.get('/emprestimos/buscar', {
+            tipo: 'associado',
+            q: '',
+            associado_id: item.id,
+            livro_id: form.livro_id || undefined,
+        }, { preserveState: true, preserveScroll: true, replace: true });
+    }
 }
 
 function limparLivro() {
