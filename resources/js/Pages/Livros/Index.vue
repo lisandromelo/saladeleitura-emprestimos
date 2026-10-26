@@ -136,10 +136,12 @@ function search() {
         </div>
 
         <div v-if="capaAmpliada" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = null" @keydown.esc="capaAmpliada = null">
-            <div class="relative flex max-h-[95vh] max-w-[90vw] flex-col items-center rounded-xl bg-white p-4 shadow-2xl">
+            <div class="relative flex h-[96vh] w-[96vw] max-h-[96vh] max-w-[96vw] flex-col items-center rounded-xl bg-white p-3 shadow-2xl sm:h-[96vh] sm:w-[96vw] sm:p-4">
                 <button type="button" class="absolute right-2 top-2 z-10 rounded-full bg-stone-900 px-3 py-1 text-lg font-bold text-white hover:bg-stone-700" aria-label="Fechar imagem ampliada" @click="capaAmpliada = null">×</button>
-                <p class="mb-3 max-w-[75vw] pr-8 text-center text-base font-semibold text-stone-900">{{ capaAmpliada.titulo }}</p>
-                <img :src="capaAmpliada.url" alt="Capa ampliada do livro" class="max-h-[78vh] max-w-full object-contain">
+                <p class="mb-3 max-w-[85vw] shrink-0 pr-8 text-center text-base font-semibold text-stone-900">{{ capaAmpliada.titulo }}</p>
+                <div class="flex min-h-0 w-full flex-1 items-center justify-center">
+                    <img :src="capaAmpliada.url" alt="Capa ampliada do livro" class="h-full w-full object-contain">
+                </div>
             </div>
         </div>
     </AppLayout>
