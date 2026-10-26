@@ -94,6 +94,21 @@ class AtualizarCapasController extends Controller
         return back()->with('success', 'Capa escolhida aplicada a '.$livro->titulo.'.');
     }
 
+    public function remover(Livro $livro): RedirectResponse
+    {
+        if (! $livro->capa) {
+            return back()->with('error', 'Este livro já está sem capa.');
+        }
+
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($livro->capa);
+        $livro->update([
+            'capa' => null,
+            'capa_busca_falhou_em' => null,
+        ]);
+
+        return back()->with('success', 'Capa removida. Você pode buscar outra ou enviar uma imagem na edição do livro.');
+    }
+
     public function descartar(Livro $livro): RedirectResponse
     {
         if ($livro->capa) {
