@@ -1,9 +1,22 @@
 <script setup>
 import { Link, router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onBeforeUnmount, ref, watch } from 'vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 
 const capaAmpliada = ref(false);
+
+function tratarEsc(event) {
+    if (event.key === 'Escape' && capaAmpliada.value) {
+        capaAmpliada.value = false;
+    }
+}
+
+watch(capaAmpliada, (aberta) => {
+    if (aberta) window.addEventListener('keydown', tratarEsc);
+    else window.removeEventListener('keydown', tratarEsc);
+});
+
+onBeforeUnmount(() => window.removeEventListener('keydown', tratarEsc));
 
 const props = defineProps({
     livro: Object,
@@ -153,11 +166,11 @@ function formatDate(value) {
             </form>
         </div>
 
-        <div v-if="capaAmpliada && livro.capa_url" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = false" @keydown.esc="capaAmpliada = false">
-            <div class="relative flex max-h-[96vh] max-w-[95vw] flex-col items-center rounded-xl bg-white p-4 shadow-2xl">
+        <div v-if="capaAmpliada && livro.capa_url" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-3" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = false">
+            <div class="relative flex max-h-[98vh] max-w-[98vw] flex-col items-center overflow-hidden rounded-lg bg-white p-2 shadow-2xl">
                 <button type="button" class="absolute right-2 top-2 z-10 rounded-full bg-stone-900 px-3 py-1 text-lg font-bold text-white hover:bg-stone-700" aria-label="Fechar imagem ampliada" @click="capaAmpliada = false">×</button>
-                <p class="mb-3 max-w-[80vw] pr-8 text-center text-base font-semibold text-stone-900">{{ livro.titulo }}</p>
-                <img :src="livro.capa_url" alt="Capa ampliada do livro" class="max-h-[85vh] max-w-full object-contain">
+                <p class="mb-2 max-w-[90vw] shrink-0 pr-10 text-center text-sm font-semibold text-stone-900">{{ livro.titulo }}</p>
+                <img :src="livro.capa_url" alt="Capa ampliada do livro" class="block max-h-[calc(98vh-3rem)] max-w-[98vw] h-auto w-auto object-contain">
             </div>
         </div>
     </AppLayout>
