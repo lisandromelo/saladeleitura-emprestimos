@@ -148,18 +148,18 @@ function confirmarRegistro() {
     <AppLayout>
         <div class="mb-8"><h1 class="text-3xl font-bold text-brand sm:text-4xl">Novo empréstimo</h1><p class="mt-2 text-base text-stone-700">Siga os passos abaixo para registrar a saída de um livro.</p></div>
 
-        <div class="grid gap-6 md:grid-cols-2">
+        <div class="grid gap-6 xl:grid-cols-2">
             <div class="rounded-xl border border-stone-300 bg-white p-5 shadow-sm" :class="livroAtual ? 'ring-1 ring-brand/20' : ''">
                 <h2 class="mb-2 text-xl font-bold text-stone-900">1. Escolha o livro</h2><p class="mb-4 text-base text-stone-700">Pesquise pelo título e selecione o livro que será emprestado.</p><div v-if="livroAtual" class="mb-4 rounded-lg border border-emerald-300 bg-emerald-50 p-3" aria-live="polite"><p class="text-base font-semibold text-stone-900">{{ livroAtual.titulo }}</p><p class="mt-1 text-sm text-stone-700">Código {{ livroAtual.codigo }}</p><button type="button" class="mt-2 text-sm font-semibold text-emerald-900 underline" @click="limparLivro">Escolher outro livro</button></div>
-                <form class="mb-3 flex gap-2" @submit.prevent="buscarLivro">
+                <form class="mb-3 flex flex-col gap-2 sm:flex-row" @submit.prevent="buscarLivro">
                     <input v-model="livroQ" class="min-h-12 flex-1 rounded-md border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-500 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" placeholder="Digite o título do livro">
-                    <button class="rounded-md bg-brand px-3 py-2 text-sm text-white">Buscar</button>
+                    <button class="min-h-12 rounded-md bg-brand px-5 py-3 text-base font-semibold text-white hover:bg-brand-dark">Buscar livro</button>
                 </form>
-                <ul v-if="busca?.tipo === 'livro'" class="space-y-1 text-sm">
+                <ul v-if="busca?.tipo === 'livro'" class="space-y-2 text-base">
                     <li v-for="item in busca.itens" :key="item.id">
                         <button
                             type="button"
-                            class="w-full rounded-md px-2 py-1.5 text-left transition hover:bg-brand/8"
+                            class="w-full rounded-md border border-stone-200 px-3 py-3 text-left text-base text-stone-900 transition hover:border-emerald-500 hover:bg-emerald-50"
                             :class="form.livro_id === item.id ? 'bg-brand/10 font-medium text-brand' : 'text-brand'"
                             @click="escolherLivro(item)"
                         >
@@ -169,11 +169,11 @@ function confirmarRegistro() {
                 </ul>
             </div>
 
-            <div class="rounded-lg border border-stone-200 bg-white/70 p-4" :class="associadoAtual ? 'ring-1 ring-brand/20' : ''">
+            <div class="rounded-xl border border-stone-300 bg-white p-5 shadow-sm" :class="associadoAtual ? 'ring-1 ring-brand/20' : ''">
                 <h2 class="mb-2 text-xl font-bold text-stone-900">2. Escolha o associado</h2><p class="mb-4 text-base text-stone-700">Pesquise pelo nome ou telefone. Se não estiver cadastrado, use o botão Novo associado.</p><div v-if="associadoAtual" class="mb-4 rounded-lg border border-emerald-300 bg-emerald-50 p-3" aria-live="polite"><p class="text-base font-semibold text-stone-900">{{ associadoAtual.nome }}</p><p class="mt-1 text-sm text-stone-700">{{ associadoAtual.telefone || "Sem telefone cadastrado" }}</p><button type="button" class="mt-2 text-sm font-semibold text-emerald-900 underline" @click="limparAssociado">Escolher outro associado</button></div>
-                <form class="mb-3 flex flex-wrap gap-2" @submit.prevent="buscarAssociado">
+                <form class="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap" @submit.prevent="buscarAssociado">
                     <input v-model="associadoQ" class="min-h-12 min-w-[12rem] flex-1 rounded-md border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-500 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" placeholder="Digite nome ou telefone">
-                    <button class="rounded-md bg-brand px-3 py-2 text-sm text-white">Buscar</button>
+                    <button class="min-h-12 rounded-md bg-brand px-5 py-3 text-base font-semibold text-white hover:bg-brand-dark">Buscar</button>
                     <button type="button" class="min-h-12 rounded-md border-2 border-emerald-800 bg-emerald-800 px-5 py-3 text-base font-bold text-white shadow-sm hover:bg-emerald-900 focus:outline-none focus:ring-4 focus:ring-emerald-700/25" @click="abrirCadastro">
                         {{ mostrarCadastro ? 'Cancelar cadastro' : '+ Novo associado' }}
                     </button>
@@ -181,27 +181,27 @@ function confirmarRegistro() {
 
                 <form
                     v-if="mostrarCadastro"
-                    class="mb-4 space-y-3 rounded-md border border-stone-200 bg-white p-3"
+                    class="mb-4 space-y-4 rounded-lg border-2 border-emerald-200 bg-emerald-50/50 p-4"
                     @submit.prevent="cadastrarAssociado"
                 >
                     <p class="text-lg font-bold text-stone-900">Cadastrar novo associado</p><p class="text-base text-stone-700">Preencha os dados para continuar com o empréstimo.</p>
-                    <label class="block text-sm">Nome
-                        <input v-model="cadastroForm.nome" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2" required>
+                    <label class="block text-base font-semibold text-stone-900">Nome
+                        <input v-model="cadastroForm.nome" class="mt-1 min-h-11 w-full rounded-md border border-stone-400 bg-white px-3 py-2.5 text-base text-stone-900 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" required>
                         <p v-if="cadastroForm.errors.nome" class="mt-1 text-sm text-warn">{{ cadastroForm.errors.nome }}</p>
                     </label>
-                    <label class="block text-sm">Telefone
+                    <label class="block text-base font-semibold text-stone-900">Telefone
                         <input v-model="cadastroForm.telefone" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2">
                     </label>
-                    <label class="block text-sm">Área
+                    <label class="block text-base font-semibold text-stone-900">Área
                         <select v-model="cadastroForm.area_id" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2">
                             <option value="">—</option>
                             <option v-for="a in areas" :key="a.id" :value="a.id">{{ a.nome }}</option>
                         </select>
                     </label>
-                    <label class="block text-sm">Observação
-                        <textarea v-model="cadastroForm.observacao" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2" rows="2" />
+                    <label class="block text-base font-semibold text-stone-900">Observação
+                        <textarea v-model="cadastroForm.observacao" class="mt-1 w-full rounded-md border border-stone-400 bg-white px-3 py-3 text-base text-stone-900 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" rows="2" />
                     </label>
-                    <button class="rounded-md bg-brand px-3 py-2 text-sm text-white" :disabled="cadastroForm.processing">
+                    <button class="min-h-12 rounded-md bg-emerald-800 px-5 py-3 text-base font-bold text-white hover:bg-emerald-900 disabled:cursor-not-allowed disabled:opacity-60" :disabled="cadastroForm.processing">
                         Salvar associado
                     </button>
                 </form>
