@@ -31,6 +31,14 @@ function fmt(iso) {
     if (!iso) return '—';
     return new Date(iso).toLocaleString('pt-BR');
 }
+
+function formatDate(value) {
+    if (!value) return '—';
+    const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) return `${match[3]}/${match[2]}/${match[1]}`;
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+}
 </script>
 
 <template>
@@ -40,14 +48,35 @@ function fmt(iso) {
                 <span aria-hidden="true">←</span> Voltar ao acervo
             </Link>
             <div class="flex flex-wrap items-start justify-between gap-3">
-            <div class="flex flex-wrap items-start gap-4">
-                <div class="flex h-40 w-28 shrink-0 items-center justify-center overflow-hidden rounded border border-stone-200 bg-stone-50">
-                    <img v-if="livro.capa_url" :src="livro.capa_url" :alt="`Capa de ${livro.titulo}`" class="h-full w-full object-cover">
-                    <span v-else class="px-2 text-center text-xs text-muted">Sem capa</span>
+            <div class="grid gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
+                <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-xl border border-stone-200 bg-stone-50 shadow-sm">
+                    <img v-if="livro.capa_url" :src="livro.capa_url" :alt="`Capa de ${livro.titulo}`" class="h-80 w-full object-contain">
+                    <span v-else class="flex h-64 w-full items-center justify-center px-3 text-center text-sm text-stone-500">Sem capa disponível</span>
                 </div>
-                <div>
-                    <h1 class="text-2xl text-brand">{{ livro.titulo }}</h1>
-                    <p class="text-sm text-stone-600">Código {{ livro.codigo }} · {{ livro.situacao }}</p>
+                <div class="min-w-0">
+                    <h1 class="text-3xl font-bold leading-tight text-brand sm:text-4xl">{{ livro.titulo }}</h1>
+                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                        <span class="rounded-md bg-stone-100 px-3 py-1.5 text-sm font-semibold text-stone-800">Código {{ livro.codigo }}</span>
+                        <span class="rounded-md px-3 py-1.5 text-sm font-bold" :class="livro.situacao === 'DISPONIVEL' ? 'bg-emerald-100 text-emerald-900' : livro.situacao === 'EMPRESTADO' ? 'bg-amber-100 text-amber-900' : 'bg-rose-100 text-rose-900'">{{ livro.situacao }}</span>
+                    </div>
+                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                            <dt class="text-sm font-semibold text-stone-600">Autor/Médium</dt>
+                            <dd class="mt-1 text-lg font-bold text-stone-950">{{ livro.autor_medium || '—' }}</dd>
+                        </div>
+                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                            <dt class="text-sm font-semibold text-stone-600">Espírito</dt>
+                            <dd class="mt-1 text-lg font-bold text-stone-950">{{ livro.espirito || '—' }}</dd>
+                        </div>
+                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                            <dt class="text-sm font-semibold text-stone-600">Classificação</dt>
+                            <dd class="mt-1 text-base font-semibold text-stone-900">{{ livro.classificacao?.nome || '—' }}</dd>
+                        </div>
+                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                            <dt class="text-sm font-semibold text-stone-600">Entrada no acervo</dt>
+                            <dd class="mt-1 text-base font-semibold text-stone-900">{{ formatDate(livro.data_entrada) }}<span v-if="livro.forma_entrada"> · {{ livro.forma_entrada }}</span></dd>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex gap-2">
@@ -57,13 +86,10 @@ function fmt(iso) {
             </div>
         </div>
 
-        <dl class="mb-8 grid gap-3 sm:grid-cols-2 text-sm">
-            <div><dt class="text-stone-500">Autor/Médium</dt><dd>{{ livro.autor_medium || '—' }}</dd></div>
-            <div><dt class="text-stone-500">Espírito</dt><dd>{{ livro.espirito || '—' }}</dd></div>
-            <div><dt class="text-stone-500">Classificação</dt><dd>{{ livro.classificacao?.nome || '—' }}</dd></div>
-            <div><dt class="text-stone-500">Entrada</dt><dd>{{ livro.data_entrada || '—' }} ({{ livro.forma_entrada || '—' }})</dd></div>
-            <div class="sm:col-span-2"><dt class="text-stone-500">Observação</dt><dd class="whitespace-pre-wrap">{{ livro.observacao || '—' }}</dd></div>
-        </dl>
+        <div v-if="livro.observacao" class="mb-8 rounded-lg border border-stone-200 bg-stone-50 p-4">
+            <h2 class="text-sm font-bold text-stone-700">Observação</h2>
+            <p class="mt-1 whitespace-pre-wrap text-base text-stone-900">{{ livro.observacao }}</p>
+        </div>
 
         <h2 class="mb-3 text-lg font-semibold">Histórico</h2>
         <div class="mb-8 overflow-x-auto rounded-lg border border-stone-200 bg-white/70">
