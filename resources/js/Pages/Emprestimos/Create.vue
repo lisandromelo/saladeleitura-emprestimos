@@ -1,6 +1,6 @@
 <script setup>
 import { router, useForm } from '@inertiajs/vue3';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -15,6 +15,7 @@ const associadoQ = ref('');
 const livroAtual = ref(null);
 const associadoAtual = ref(null);
 const mostrarCadastro = ref(false);
+const nomeAssociadoInput = ref(null);
 const mostrarResultadosLivro = ref(false);
 const mostrarResultadosAssociado = ref(false);
 const confirmarAberto = ref(false);
@@ -111,10 +112,14 @@ function limparAssociado() {
     associadoQ.value = '';
 }
 
-function abrirCadastro() {
+async function abrirCadastro() {
     mostrarCadastro.value = !mostrarCadastro.value;
-    if (mostrarCadastro.value && associadoQ.value && !cadastroForm.nome) {
-        cadastroForm.nome = associadoQ.value;
+    if (mostrarCadastro.value) {
+        if (associadoQ.value && !cadastroForm.nome) {
+            cadastroForm.nome = associadoQ.value;
+        }
+        await nextTick();
+        nomeAssociadoInput.value?.focus();
     }
 }
 
@@ -197,7 +202,7 @@ function confirmarRegistro() {
                 >
                     <p class="text-lg font-bold text-stone-900">Cadastrar novo associado</p><p class="text-base text-stone-700">Preencha os dados para continuar com o empréstimo.</p>
                     <label class="block text-base font-semibold text-stone-900">Nome
-                        <input v-model="cadastroForm.nome" class="mt-1 min-h-11 w-full rounded-md border border-stone-400 bg-white px-3 py-2.5 text-base text-stone-900 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" required>
+                        <input ref="nomeAssociadoInput" v-model="cadastroForm.nome" class="mt-1 min-h-11 w-full rounded-md border border-stone-400 bg-white px-3 py-2.5 text-base text-stone-900 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" required>
                         <p v-if="cadastroForm.errors.nome" class="mt-1 text-sm text-warn">{{ cadastroForm.errors.nome }}</p>
                     </label>
                     <label class="block text-base font-semibold text-stone-900">Telefone
