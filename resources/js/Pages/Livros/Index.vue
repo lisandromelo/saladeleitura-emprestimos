@@ -1,6 +1,6 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -13,6 +13,15 @@ const q = ref(props.filters.q || '');
 const situacao = ref(props.filters.situacao || '');
 const incluirBaixados = ref(!!props.filters.incluir_baixados);
 const layout = ref('lista');
+
+onMounted(() => {
+    const salvo = window.localStorage.getItem('acervo-layout');
+    if (salvo === 'lista' || salvo === 'blocos') layout.value = salvo;
+});
+
+watch(layout, (valor) => {
+    window.localStorage.setItem('acervo-layout', valor);
+});
 
 function search() {
     router.get('/livros', {
