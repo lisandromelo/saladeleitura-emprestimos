@@ -1,6 +1,9 @@
 <script setup>
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
+
+const capaAmpliada = ref(false);
 
 const props = defineProps({
     livro: Object,
@@ -17,6 +20,11 @@ const baixaForm = useForm({
 const ausenciaForm = useForm({
     data_balanco: new Date().toISOString().slice(0, 10),
 });
+
+function removerCapa() {
+    if (!confirm('Remover a capa deste livro? Você poderá buscar outra depois.')) return;
+    router.post('/livros/' + props.livro.id + '/capa/remover', {}, { preserveScroll: true });
+}
 
 function baixar() {
     if (!confirm('Confirmar baixa deste livro?')) return;
@@ -50,7 +58,7 @@ function formatDate(value) {
             <div class="flex flex-wrap items-start justify-between gap-3">
             <div class="grid gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
                 <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-xl border border-stone-200 bg-stone-50 shadow-sm">
-                    <img v-if="livro.capa_url" :src="livro.capa_url" :alt="`Capa de ${livro.titulo}`" class="h-80 w-full object-contain">
+                    <button v-if="livro.capa_url" type="button" class="w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-emerald-700/30" aria-label="Ampliar capa do livro" @click="capaAmpliada = true"><img :src="livro.capa_url" alt="Capa do livro" class="h-80 w-full object-contain"></button>
                     <span v-else class="flex h-64 w-full items-center justify-center px-3 text-center text-sm text-stone-500">Sem capa disponível</span>
                 </div>
                 <div class="min-w-0">
@@ -79,8 +87,10 @@ function formatDate(value) {
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <Link v-if="canManage" :href="`/livros/${livro.id}/editar`" class="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm">Editar</Link>
+            <div class="flex flex-wrap gap-2">
+                <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar'" class="rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50">Editar</Link>
+                <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar#capa'" class="rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">Buscar/alterar capa</Link>
+                <button v-if="canManage && livro.capa_url" type="button" class="rounded-md border border-rose-300 bg-white px-3 py-2 text-sm font-semibold text-rose-800 hover:bg-rose-50" @click="removerCapa">Remover capa</button>
                 <Link href="/emprestimos/novo" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Emprestar</Link>
             </div>
             </div>
@@ -137,6 +147,14 @@ function formatDate(value) {
                 </label>
                 <button class="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm">Registrar ausência</button>
             </form>
+        </div>
+
+        <div v-if="capaAmpliada && livro.capa_url" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = false" @keydown.esc="capaAmpliada = false">
+            <div class="relative flex max-h-[96vh] max-w-[95vw] flex-col items-center rounded-xl bg-white p-4 shadow-2xl">
+                <button type="button" class="absolute right-2 top-2 z-10 rounded-full bg-stone-900 px-3 py-1 text-lg font-bold text-white hover:bg-stone-700" aria-label="Fechar imagem ampliada" @click="capaAmpliada = false">×</button>
+                <p class="mb-3 max-w-[80vw] pr-8 text-center text-base font-semibold text-stone-900">{{ livro.titulo }}</p>
+                <img :src="livro.capa_url" alt="Capa ampliada do livro" class="max-h-[85vh] max-w-full object-contain">
+            </div>
         </div>
     </AppLayout>
 </template>
