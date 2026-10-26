@@ -93,6 +93,43 @@ class AtualizarCapasTest extends TestCase
         $this->assertNull($livro->capa_busca_falhou_em);
     }
 
+    public function test_aplica_automaticamente_correspondencia_exata_e_pula_busca_lenta_no_archive(): void
+    {
+        Storage::fake('public');
+
+        $livro = Livro::query()->create([
+            'codigo' => '4',
+            'titulo' => 'Nosso Lar',
+            'autor_medium' => 'Chico Xavier',
+            'situacao' => 'DISPONIVEL',
+        ]);
+
+        Http::fake([
+            'www.googleapis.com/books/*' => Http::response([
+                'items' => [[
+                    'volumeInfo' => [
+                        'title' => 'Nosso Lar',
+                        'authors' => ['Chico Xavier'],
+                        'imageLinks' => ['thumbnail' => 'https://covers.example/nosso-lar.jpg'],
+                    ],
+                ]],
+            ], 200),
+            'covers.example/*' => Http::response(str_repeat('I', 2000), 200, ['Content-Type' => 'image/jpeg']),
+            'openlibrary.org/*' => Http::response(['docs' => []], 200),
+        ]);
+
+        $resultado = app(CapaLivroService::class)->atualizarLote(1);
+
+        $livro->refresh();
+
+        $this->assertSame(1, $resultado['encontradas']);
+        $this->assertSame('encontrada', $resultado['detalhes'][0]['status']);
+        $this->assertNotNull($livro->capa);
+        $this->assertNull($livro->capa_busca_falhou_em);
+        Http::assertNotSent(fn ($request) => str_contains($request->url(), 'archive.org/advancedsearch.php'));
+        Storage::disk('public')->assertExists($livro->capa);
+    }
+
     public function test_lote_pede_escolha_quando_ha_mais_de_uma_capa(): void
     {
         Livro::query()->create([
