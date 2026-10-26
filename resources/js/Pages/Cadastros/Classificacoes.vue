@@ -32,7 +32,7 @@ function excluir(item) {
 
 <template>
     <AppLayout>
-        <h1 class="mb-6 text-2xl text-brand">Classificações</h1>
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 class="text-2xl text-brand">Classificações</h1><Link href="/" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50"><span aria-hidden="true">←</span> Voltar</Link></div>
 
         <form class="mb-6 flex gap-2" @submit.prevent="store">
             <input v-model="form.nome" class="rounded-md border border-stone-300 bg-white px-3 py-2 text-sm" placeholder="Nova classificação" required>
