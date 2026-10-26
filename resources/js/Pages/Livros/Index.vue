@@ -13,6 +13,7 @@ const q = ref(props.filters.q || '');
 const situacao = ref(props.filters.situacao || '');
 const incluirBaixados = ref(!!props.filters.incluir_baixados);
 const layout = ref('lista');
+const capaAmpliada = ref(null);
 
 onMounted(() => {
     const salvo = window.localStorage.getItem('acervo-layout');
@@ -88,7 +89,7 @@ function search() {
                         <td colspan="7" class="p-0">
                             <Link :href="`/livros/${livro.id}`" class="grid grid-cols-[3.5rem_4rem_minmax(12rem,2fr)_minmax(8rem,1fr)_minmax(7rem,1fr)_minmax(7rem,1fr)_7rem] items-center text-stone-800 transition-colors hover:text-emerald-950">
                                 <span class="px-3 py-2">
-                                    <img v-if="livro.capa_url" :src="livro.capa_url" :alt="`Capa de ${livro.titulo}`" class="h-14 w-10 rounded object-cover shadow-sm">
+                                    <button v-if="livro.capa_url" type="button" class="rounded focus:outline-none focus:ring-2 focus:ring-emerald-700" aria-label="Ampliar capa" @click.stop.prevent="capaAmpliada = { url: livro.capa_url, titulo: livro.titulo }"><img :src="livro.capa_url" alt="Capa do livro" class="h-14 w-10 rounded object-cover shadow-sm transition hover:scale-105"></button>
                                     <span v-else class="text-xs text-stone-500">—</span>
                                 </span>
                                 <span class="px-3 py-2 text-brand">{{ livro.codigo }}</span>
@@ -107,7 +108,7 @@ function search() {
         <div v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <Link v-for="livro in livros.data" :key="livro.id" :href="`/livros/${livro.id}`" class="group flex min-h-40 gap-4 rounded-xl border border-stone-300 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-600 hover:bg-emerald-50/50 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-emerald-700/20">
                 <span class="flex h-28 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-stone-100">
-                    <img v-if="livro.capa_url" :src="livro.capa_url" :alt="`Capa de ${livro.titulo}`" class="h-full w-full object-cover">
+                    <button v-if="livro.capa_url" type="button" class="h-full w-full focus:outline-none focus:ring-2 focus:ring-emerald-700" aria-label="Ampliar capa" @click.stop.prevent="capaAmpliada = { url: livro.capa_url, titulo: livro.titulo }"><img :src="livro.capa_url" alt="Capa do livro" class="h-full w-full object-cover transition group-hover:scale-[1.02]"></button>
                     <span v-else class="text-sm text-stone-500">Sem capa</span>
                 </span>
                 <span class="flex min-w-0 flex-1 flex-col">
@@ -129,6 +130,14 @@ function search() {
                 :class="{ 'bg-brand text-white': link.active, 'pointer-events-none opacity-40': !link.url }"
                 v-html="link.label"
             />
+        </div>
+
+        <div v-if="capaAmpliada" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = null" @keydown.esc="capaAmpliada = null">
+            <div class="relative flex max-h-[95vh] max-w-[90vw] flex-col items-center rounded-xl bg-white p-4 shadow-2xl">
+                <button type="button" class="absolute right-2 top-2 z-10 rounded-full bg-stone-900 px-3 py-1 text-lg font-bold text-white hover:bg-stone-700" aria-label="Fechar imagem ampliada" @click="capaAmpliada = null">×</button>
+                <p class="mb-3 max-w-[75vw] pr-8 text-center text-base font-semibold text-stone-900">{{ capaAmpliada.titulo }}</p>
+                <img :src="capaAmpliada.url" alt="Capa ampliada do livro" class="max-h-[78vh] max-w-full object-contain">
+            </div>
         </div>
     </AppLayout>
 </template>
