@@ -27,9 +27,15 @@ function search() {
     <AppLayout>
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
             <h1 class="text-3xl font-bold text-brand">Acervo</h1>
-            <div class="flex items-center gap-1 rounded-lg border border-stone-300 bg-white p-1" role="group" aria-label="Modo de visualização">
-                <button type="button" class="rounded-md px-3 py-2 text-sm font-semibold" :class="layout === 'lista' ? 'bg-emerald-800 text-white' : 'text-stone-700 hover:bg-stone-100'" :aria-pressed="layout === 'lista'" @click="layout = 'lista'">Lista</button>
-                <button type="button" class="rounded-md px-3 py-2 text-sm font-semibold" :class="layout === 'blocos' ? 'bg-emerald-800 text-white' : 'text-stone-700 hover:bg-stone-100'" :aria-pressed="layout === 'blocos'" @click="layout = 'blocos'">Blocos</button>
+            <div class="flex items-center gap-1 rounded-lg border border-stone-300 bg-stone-100 p-1.5 shadow-inner" role="group" aria-label="Modo de visualização">
+                <button type="button" class="inline-flex min-h-10 items-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-emerald-700/30" :class="layout === 'lista' ? 'border-emerald-800 bg-emerald-800 text-white shadow-sm' : 'border-transparent bg-white text-stone-700 hover:bg-stone-50'" :aria-pressed="layout === 'lista'" @click="layout = 'lista'">
+                    <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M3 4h2v2H3V4Zm4 0h10v2H7V4ZM3 9h2v2H3V9Zm4 0h10v2H7V9Zm-4 5h2v2H3v-2Zm4 0h10v2H7v-2Z"/></svg>
+                    Lista
+                </button>
+                <button type="button" class="inline-flex min-h-10 items-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-emerald-700/30" :class="layout === 'blocos' ? 'border-emerald-800 bg-emerald-800 text-white shadow-sm' : 'border-transparent bg-white text-stone-700 hover:bg-stone-50'" :aria-pressed="layout === 'blocos'" @click="layout = 'blocos'">
+                    <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M2 2h7v7H2V2Zm9 0h7v7h-7V2ZM2 11h7v7H2v-7Zm9 0h7v7h-7v-7Z"/></svg>
+                    Blocos
+                </button>
             </div>
             <Link v-if="canManage" href="/livros/criar" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Novo livro</Link>
         </div>
