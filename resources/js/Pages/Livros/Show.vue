@@ -35,7 +35,11 @@ function fmt(iso) {
 
 <template>
     <AppLayout>
-        <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div class="mb-6">
+            <Link href="/livros" class="mb-4 inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50 focus:outline-none focus:ring-4 focus:ring-emerald-700/20">
+                <span aria-hidden="true">←</span> Voltar ao acervo
+            </Link>
+            <div class="flex flex-wrap items-start justify-between gap-3">
             <div class="flex flex-wrap items-start gap-4">
                 <div class="flex h-40 w-28 shrink-0 items-center justify-center overflow-hidden rounded border border-stone-200 bg-stone-50">
                     <img v-if="livro.capa_url" :src="livro.capa_url" :alt="`Capa de ${livro.titulo}`" class="h-full w-full object-cover">
@@ -49,6 +53,7 @@ function fmt(iso) {
             <div class="flex gap-2">
                 <Link v-if="canManage" :href="`/livros/${livro.id}/editar`" class="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm">Editar</Link>
                 <Link href="/emprestimos/novo" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Emprestar</Link>
+            </div>
             </div>
         </div>
 
