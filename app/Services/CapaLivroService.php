@@ -315,19 +315,37 @@ class CapaLivroService
     private function filtrarPorTitulo(array $resultados, string $titulo): array
     {
         $compativeis = [];
+        $alternativas = [];
 
         foreach ($resultados as $item) {
-            if (! $this->tituloCompativel($titulo, $item['titulo'])) {
+            if ($this->tituloCompativel($titulo, $item['titulo'])) {
+                $compativeis[] = $item;
                 continue;
             }
-            $compativeis[] = $item;
+
+            // Busca ampliada para não perder títulos com subtítulos ou pequenas variações.
+            // Estes resultados nunca são aplicados automaticamente: ficam para revisão.
+            $tokensConsulta = $this->tokens($titulo);
+            $tokensCandidato = $this->tokens($item['titulo']);
+            if ($tokensConsulta === [] || $tokensCandidato === []) {
+                continue;
+            }
+
+            $cobertura = count(array_intersect($tokensConsulta, $tokensCandidato)) / count($tokensConsulta);
+            $extras = count(array_diff($tokensCandidato, $tokensConsulta));
+
+            if ($cobertura >= 0.6 && $extras <= 4) {
+                $alternativas[] = $item;
+            }
         }
 
-        usort($compativeis, function (array $a, array $b) use ($titulo): int {
+        $selecionados = $compativeis !== [] ? $compativeis : $alternativas;
+
+        usort($selecionados, function (array $a, array $b) use ($titulo): int {
             return $this->pontuarTitulo($titulo, $b['titulo']) <=> $this->pontuarTitulo($titulo, $a['titulo']);
         });
 
-        return $compativeis;
+        return $selecionados;
     }
 
     /**
