@@ -52,9 +52,11 @@ function formatDate(value) {
 <template>
     <AppLayout>
         <div class="mb-6">
-            <Link href="/livros" class="mb-4 inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50 focus:outline-none focus:ring-4 focus:ring-emerald-700/20">
-                <span aria-hidden="true">←</span> Voltar ao acervo
-            </Link>
+            <div class="mb-4 flex justify-end">
+                <Link href="/livros" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50 focus:outline-none focus:ring-4 focus:ring-emerald-700/20">
+                    <span aria-hidden="true">←</span> Voltar ao acervo
+                </Link>
+            </div>
             <div class="grid items-start gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
                 <section class="min-w-0 rounded-xl border border-stone-200 bg-white p-3 shadow-sm">
                     <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
