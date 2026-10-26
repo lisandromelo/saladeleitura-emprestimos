@@ -47,7 +47,10 @@ function search() {
                     Blocos
                 </button>
             </div>
-            <Link v-if="canManage" href="/livros/criar" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Novo livro</Link>
+            <div class="flex flex-wrap items-center justify-end gap-2">
+                <Link v-if="canManage" href="/livros/criar" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Novo livro</Link>
+                <Link href="/" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50"><span aria-hidden="true">←</span> Voltar</Link>
+            </div>
         </div>
 
         <form class="mb-6 flex flex-wrap items-end gap-3" @submit.prevent="search">
