@@ -462,6 +462,8 @@ class CapaLivroService
      */
     private function temCorrespondenciaConfiavel(string $titulo, ?string $autor, array $candidatos): bool
     {
+        $correspondencias = 0;
+
         foreach ($candidatos as $candidato) {
             if ($this->normalizar($titulo) !== $this->normalizar($candidato['titulo'])) {
                 continue;
@@ -471,10 +473,11 @@ class CapaLivroService
                 continue;
             }
 
-            return true;
+            $correspondencias++;
         }
 
-        return false;
+        // Mais de uma capa igualmente compatível pode representar edições distintas.
+        return $correspondencias === 1;
     }
 
     /**
