@@ -198,12 +198,12 @@ function submit() {
 <template>
     <AppLayout>
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <Link :href="editing ? '/livros/' + livro.id : '/livros'" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50">
-                <span aria-hidden="true">←</span> Voltar
-            </Link>
             <h1 class="text-2xl text-brand">
                 {{ editing ? 'Editar livro' : 'Novo livro' }}
             </h1>
+            <Link :href="editing ? '/livros/' + livro.id : '/livros'" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50">
+                <span aria-hidden="true">←</span> Voltar
+            </Link>
         </div>
 
         <form class="max-w-xl space-y-4" enctype="multipart/form-data" @submit.prevent="submit">
