@@ -66,6 +66,13 @@ class CapaLivroService
         }
 
         $catalogo = $this->unicos($this->filtrarPorTitulo($resultados, $titulo), 6);
+
+        // Evita uma terceira consulta externa quando já existe uma correspondência forte.
+        // Isso reduz bastante a espera nos casos comuns sem aumentar o risco de capa errada.
+        if ($this->temCorrespondenciaConfiavel($titulo, $autor, $catalogo)) {
+            return [$this->melhorCorrespondencia($titulo, $autor, $catalogo)];
+        }
+
         $arquivo = $this->buscarInternetArchive($titulo, $autor);
 
         if ($this->googleVolumesIndisponivel && $this->openLibraryIndisponivel && $this->internetArchiveIndisponivel && $catalogo === [] && $arquivo === []) {
@@ -445,6 +452,50 @@ class CapaLivroService
 
             return [];
         }
+    }
+
+    /**
+     * Só automatiza quando o título normalizado coincide integralmente e o autor
+     * também é compatível, quando conhecido. Casos duvidosos seguem para revisão.
+     *
+     * @param  list<array{titulo: string, autores: string, thumbnail: string, fonte: string}>  $candidatos
+     */
+    private function temCorrespondenciaConfiavel(string $titulo, ?string $autor, array $candidatos): bool
+    {
+        foreach ($candidatos as $candidato) {
+            if ($this->normalizar($titulo) !== $this->normalizar($candidato['titulo'])) {
+                continue;
+            }
+
+            if ($autor && ! $this->autorCompativel($autor, $candidato['autores'] !== '' ? [$candidato['autores']] : [])) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  list<array{titulo: string, autores: string, thumbnail: string, fonte: string}>  $candidatos
+     * @return array{titulo: string, autores: string, thumbnail: string, fonte: string}
+     */
+    private function melhorCorrespondencia(string $titulo, ?string $autor, array $candidatos): array
+    {
+        usort($candidatos, function (array $a, array $b) use ($titulo, $autor): int {
+            $pontuacaoA = $this->pontuarTitulo($titulo, $a['titulo']);
+            $pontuacaoB = $this->pontuarTitulo($titulo, $b['titulo']);
+
+            if ($autor) {
+                $pontuacaoA += $this->autorCompativel($autor, [$a['autores']]) ? 0.2 : 0;
+                $pontuacaoB += $this->autorCompativel($autor, [$b['autores']]) ? 0.2 : 0;
+            }
+
+            return $pontuacaoB <=> $pontuacaoA;
+        });
+
+        return $candidatos[0];
     }
 
     private function mencionaTitulo(string $consulta, string $texto): bool
