@@ -146,51 +146,13 @@ function confirmarRegistro() {
 
 <template>
     <AppLayout>
-        <h1 class="mb-6 text-2xl text-brand">Novo empréstimo</h1>
-
-        <section
-            class="mb-6 overflow-hidden rounded-xl border-2 border-brand/35 bg-gradient-to-br from-brand/10 via-white to-paper shadow-[0_10px_30px_-18px_rgba(0,109,91,0.55)]"
-            aria-live="polite"
-        >
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-brand/15 bg-brand px-4 py-2.5 text-white">
-                <h2 class="text-sm font-semibold tracking-wide uppercase">Selecionados</h2>
-                <p class="text-xs text-white/85">Revise livro e associado antes de registrar</p>
-            </div>
-
-            <div class="grid gap-0 md:grid-cols-2">
-                <div class="border-b border-brand/10 p-4 md:border-b-0 md:border-r">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-brand">Livro</p>
-                    <template v-if="livroAtual">
-                        <p class="mt-1 text-lg font-semibold text-ink">{{ livroAtual.titulo }}</p>
-                        <p class="mt-0.5 text-sm text-muted">Código {{ livroAtual.codigo }}</p>
-                        <p v-if="livroAtual.autor" class="mt-1 text-xs text-muted">{{ livroAtual.autor }}</p>
-                        <button type="button" class="mt-3 text-xs font-medium text-warn hover:underline" @click="limparLivro">
-                            Trocar livro
-                        </button>
-                    </template>
-                    <p v-else class="mt-2 text-sm text-muted">Nenhum livro selecionado</p>
-                </div>
-
-                <div class="p-4">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-brand">Associado</p>
-                    <template v-if="associadoAtual">
-                        <p class="mt-1 text-lg font-semibold text-ink">{{ associadoAtual.nome }}</p>
-                        <p v-if="associadoAtual.telefone" class="mt-0.5 text-sm text-ink/90">{{ associadoAtual.telefone }}</p>
-                        <p v-else class="mt-0.5 text-sm text-muted">Sem telefone</p>
-                        <button type="button" class="mt-3 text-xs font-medium text-warn hover:underline" @click="limparAssociado">
-                            Trocar associado
-                        </button>
-                    </template>
-                    <p v-else class="mt-2 text-sm text-muted">Nenhum associado selecionado</p>
-                </div>
-            </div>
-        </section>
+        <div class="mb-8"><h1 class="text-3xl font-bold text-brand sm:text-4xl">Novo empréstimo</h1><p class="mt-2 text-base text-stone-700">Siga os passos abaixo para registrar a saída de um livro.</p></div>
 
         <div class="grid gap-6 md:grid-cols-2">
-            <div class="rounded-lg border border-stone-200 bg-white/70 p-4" :class="livroAtual ? 'ring-1 ring-brand/20' : ''">
-                <h2 class="mb-3 font-semibold">Livro</h2>
+            <div class="rounded-xl border border-stone-300 bg-white p-5 shadow-sm" :class="livroAtual ? 'ring-1 ring-brand/20' : ''">
+                <h2 class="mb-2 text-xl font-bold text-stone-900">1. Escolha o livro</h2><p class="mb-4 text-base text-stone-700">Pesquise pelo título e selecione o livro que será emprestado.</p><div v-if="livroAtual" class="mb-4 rounded-lg border border-emerald-300 bg-emerald-50 p-3" aria-live="polite"><p class="text-base font-semibold text-stone-900">{{ livroAtual.titulo }}</p><p class="mt-1 text-sm text-stone-700">Código {{ livroAtual.codigo }}</p><button type="button" class="mt-2 text-sm font-semibold text-emerald-900 underline" @click="limparLivro">Escolher outro livro</button></div>
                 <form class="mb-3 flex gap-2" @submit.prevent="buscarLivro">
-                    <input v-model="livroQ" class="flex-1 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm" placeholder="Título do livro">
+                    <input v-model="livroQ" class="min-h-12 flex-1 rounded-md border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-500 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" placeholder="Digite o título do livro">
                     <button class="rounded-md bg-brand px-3 py-2 text-sm text-white">Buscar</button>
                 </form>
                 <ul v-if="busca?.tipo === 'livro'" class="space-y-1 text-sm">
@@ -208,12 +170,12 @@ function confirmarRegistro() {
             </div>
 
             <div class="rounded-lg border border-stone-200 bg-white/70 p-4" :class="associadoAtual ? 'ring-1 ring-brand/20' : ''">
-                <h2 class="mb-3 font-semibold">Associado</h2>
+                <h2 class="mb-2 text-xl font-bold text-stone-900">2. Escolha o associado</h2><p class="mb-4 text-base text-stone-700">Pesquise pelo nome ou telefone. Se não estiver cadastrado, use o botão Novo associado.</p><div v-if="associadoAtual" class="mb-4 rounded-lg border border-emerald-300 bg-emerald-50 p-3" aria-live="polite"><p class="text-base font-semibold text-stone-900">{{ associadoAtual.nome }}</p><p class="mt-1 text-sm text-stone-700">{{ associadoAtual.telefone || "Sem telefone cadastrado" }}</p><button type="button" class="mt-2 text-sm font-semibold text-emerald-900 underline" @click="limparAssociado">Escolher outro associado</button></div>
                 <form class="mb-3 flex flex-wrap gap-2" @submit.prevent="buscarAssociado">
-                    <input v-model="associadoQ" class="min-w-[12rem] flex-1 rounded-md border border-stone-300 bg-white px-3 py-2 text-sm" placeholder="Nome ou telefone">
+                    <input v-model="associadoQ" class="min-h-12 min-w-[12rem] flex-1 rounded-md border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-500 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" placeholder="Digite nome ou telefone">
                     <button class="rounded-md bg-brand px-3 py-2 text-sm text-white">Buscar</button>
-                    <button type="button" class="rounded-md border border-brand px-3 py-2 text-sm text-brand hover:bg-brand hover:text-white" @click="abrirCadastro">
-                        {{ mostrarCadastro ? 'Fechar' : 'Cadastrar' }}
+                    <button type="button" class="min-h-12 rounded-md border-2 border-emerald-800 bg-emerald-800 px-5 py-3 text-base font-bold text-white shadow-sm hover:bg-emerald-900 focus:outline-none focus:ring-4 focus:ring-emerald-700/25" @click="abrirCadastro">
+                        {{ mostrarCadastro ? 'Cancelar cadastro' : '+ Novo associado' }}
                     </button>
                 </form>
 
@@ -222,7 +184,7 @@ function confirmarRegistro() {
                     class="mb-4 space-y-3 rounded-md border border-stone-200 bg-white p-3"
                     @submit.prevent="cadastrarAssociado"
                 >
-                    <p class="text-sm font-medium text-ink">Novo associado</p>
+                    <p class="text-lg font-bold text-stone-900">Cadastrar novo associado</p><p class="text-base text-stone-700">Preencha os dados para continuar com o empréstimo.</p>
                     <label class="block text-sm">Nome
                         <input v-model="cadastroForm.nome" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2" required>
                         <p v-if="cadastroForm.errors.nome" class="mt-1 text-sm text-warn">{{ cadastroForm.errors.nome }}</p>
@@ -259,11 +221,13 @@ function confirmarRegistro() {
             </div>
         </div>
 
-        <form class="mt-6 max-w-xl space-y-3" @submit.prevent="pedirConfirmacao">
-            <label class="block text-sm">Observação
+        <form class="mt-8 max-w-2xl space-y-4 rounded-xl border border-stone-300 bg-white p-5 shadow-sm" @submit.prevent="pedirConfirmacao">
+            <h2 class="text-xl font-bold text-stone-900">3. Confirmar empréstimo</h2>
+            <p class="text-base text-stone-700">Confira os dados e registre o empréstimo.</p>
+            <label class="block text-base font-semibold text-stone-900">Observação
                 <textarea v-model="form.observacao" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2" rows="2" />
             </label>
-            <button class="rounded-md bg-brand px-4 py-2 text-sm text-white" :disabled="!podeRegistrar">
+            <button class="min-h-12 rounded-md bg-emerald-800 px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-emerald-900 focus:outline-none focus:ring-4 focus:ring-emerald-700/25 disabled:cursor-not-allowed disabled:opacity-50" :disabled="!podeRegistrar">
                 Registrar empréstimo
             </button>
         </form>
