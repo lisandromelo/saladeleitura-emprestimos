@@ -122,7 +122,7 @@ function confirmarCancelar() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="e in emprestimos.data" :key="e.id" class="border-t-2 border-stone-200 even:bg-stone-50 hover:bg-emerald-50/60">
+                    <tr v-for="e in emprestimos.data" :key="e.id" class="border-t border-stone-200 odd:bg-white even:bg-stone-50 hover:bg-emerald-50/60">
                         <td class="px-4 py-3"><div class="font-semibold text-stone-900">{{ e.livro?.titulo }}</div><div class="mt-0.5 text-sm text-stone-700">Código {{ e.livro?.codigo }}</div></td>
                         <td class="px-4 py-3"><div class="font-semibold text-stone-900">{{ e.associado?.nome }}</div><div v-if="e.associado?.telefone" class="mt-0.5 text-sm text-stone-700">{{ e.associado.telefone }}</div></td>
                         <td class="px-4 py-3 whitespace-nowrap text-stone-800">{{ fmt(e.data_retirada) }}</td>
