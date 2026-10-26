@@ -145,6 +145,9 @@ function fecharConfirmacao() {
 
 function confirmarRegistro() {
     form.post('/emprestimos', {
+        onSuccess: () => {
+            router.visit('/');
+        },
         onFinish: () => {
             confirmarAberto.value = false;
         },
