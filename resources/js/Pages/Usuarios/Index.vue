@@ -1,5 +1,5 @@
 <script setup>
-import { router, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import AppLayout from '../../Layouts/AppLayout.vue';
 
 defineProps({
@@ -31,7 +31,7 @@ function update(u, event) {
 
 <template>
     <AppLayout>
-        <h1 class="mb-6 text-2xl text-brand">Usuários / Operadores</h1>
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 class="text-2xl text-brand">Usuários / Operadores</h1><Link href="/" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50"><span aria-hidden="true">←</span> Voltar</Link></div>
 
         <form class="mb-8 grid max-w-xl gap-3 rounded-lg border border-stone-200 bg-white/70 p-4" @submit.prevent="store">
             <h2 class="font-semibold">Novo usuário</h2>
