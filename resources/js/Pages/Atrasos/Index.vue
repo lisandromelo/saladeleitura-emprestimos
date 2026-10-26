@@ -45,7 +45,7 @@ function fmt(iso) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="e in emprestimos" :key="e.id" class="border-t border-stone-100">
+                    <tr v-for="e in emprestimos" :key="e.id" class="border-t border-stone-200 odd:bg-white even:bg-stone-50 hover:bg-emerald-50/60">
                         <td class="px-3 py-2">{{ e.associado?.nome }}</td>
                         <td class="px-3 py-2">{{ e.associado?.telefone || '—' }}</td>
                         <td class="px-3 py-2">{{ e.livro?.codigo }} — {{ e.livro?.titulo }}</td>
