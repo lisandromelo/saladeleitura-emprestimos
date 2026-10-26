@@ -90,7 +90,7 @@ function formatDate(value) {
                             <dd class="mt-1 text-base font-semibold text-stone-900">{{ formatDate(livro.data_entrada) }}<span v-if="livro.forma_entrada"> · {{ livro.forma_entrada }}</span></dd>
                         </div>
                     </div>
-                    <div class="mt-4 flex flex-wrap gap-2">
+                    <div class="mt-4 flex flex-wrap justify-end gap-2 border-t border-stone-100 pt-4">
                         <Link href="/emprestimos/novo" class="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white">Emprestar</Link>
                         <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar'" class="rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50">Editar</Link>
                     </div>
