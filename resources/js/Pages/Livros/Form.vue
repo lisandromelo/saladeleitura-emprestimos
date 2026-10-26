@@ -125,6 +125,42 @@ async function escolherCapa(item) {
     }
 }
 
+async function colarCapa() {
+    buscaErro.value = '';
+    try {
+        const clipboardItems = await navigator.clipboard.read();
+        for (const item of clipboardItems) {
+            const mime = item.types.find((type) => ['image/png', 'image/jpeg', 'image/webp'].includes(type));
+            if (!mime) continue;
+            const blob = await item.getType(mime);
+            const extensao = mime === 'image/jpeg' ? 'jpg' : mime === 'image/webp' ? 'webp' : 'png';
+            const arquivo = new File([blob], 'capa-colada.' + extensao, { type: mime });
+            form.capa = arquivo;
+            form.capa_importada = '';
+            form.remover_capa = false;
+            preview.value = URL.createObjectURL(arquivo);
+            resultados.value = [];
+            return;
+        }
+        buscaErro.value = 'A área de transferência não contém uma imagem. Copie ou recorte a imagem novamente e tente colar.';
+    } catch (erro) {
+        buscaErro.value = 'O navegador não permitiu ler a área de transferência. Clique no campo abaixo e pressione Ctrl+V, ou selecione a imagem do computador.';
+    }
+}
+
+function colarEvento(event) {
+    const item = Array.from(event.clipboardData?.items || []).find((entrada) => entrada.type.startsWith('image/'));
+    if (!item) return;
+    const arquivo = item.getAsFile();
+    if (!arquivo) return;
+    const extensao = arquivo.type.split('/')[1] || 'png';
+    form.capa = new File([arquivo], 'capa-colada.' + extensao, { type: arquivo.type });
+    form.capa_importada = '';
+    form.remover_capa = false;
+    preview.value = URL.createObjectURL(arquivo);
+    resultados.value = [];
+    buscaErro.value = '';
+}
 function onCapaChange(event) {
     const file = event.target.files?.[0] || null;
     form.capa = file;
@@ -185,6 +221,7 @@ function submit() {
                         <p class="text-xs text-muted">JPG, PNG, WEBP ou GIF · máx. 2 MB</p>
                         <p v-if="form.errors.capa" class="text-sm text-warn">{{ form.errors.capa }}</p>
                         <div class="flex flex-wrap gap-2">
+                            <button type="button" class="rounded-md border border-emerald-800 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-100" @click="colarCapa">Colar imagem</button>
                             <button
                                 type="button"
                                 class="rounded-md bg-brand px-3 py-1.5 text-xs text-white disabled:opacity-60"
@@ -211,6 +248,11 @@ function submit() {
                         <p v-if="importando" class="text-xs text-muted">Importando capa selecionada…</p>
                     </div>
                 </div>
+
+                <label class="mt-2 block text-xs text-stone-600">
+                    Ou clique neste campo e pressione Ctrl+V para colar uma imagem copiada.
+                    <input type="text" class="mt-1 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm" placeholder="Clique aqui e pressione Ctrl+V" @paste="colarEvento">
+                </label>
 
                 <div v-if="resultados.length" class="border-t border-stone-100 pt-3">
                     <p class="mb-2 text-sm font-medium">Selecione uma capa encontrada</p>
