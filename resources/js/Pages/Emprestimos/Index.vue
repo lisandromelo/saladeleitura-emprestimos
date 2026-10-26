@@ -1,11 +1,23 @@
 <script setup>
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 
-defineProps({
+const props = defineProps({
     emprestimos: Object,
+    filtros: { type: Object, default: () => ({ q: '' }) },
 });
+
+const pesquisa = ref(props.filtros?.q || '');
+
+function pesquisar() {
+    router.get('/emprestimos', { q: pesquisa.value }, { preserveState: true, preserveScroll: true, replace: true });
+}
+
+function limparPesquisa() {
+    pesquisa.value = '';
+    pesquisar();
+}
 
 const emprestimoDevolucao = ref(null);
 const dataDevolucaoAgora = ref(null);
@@ -84,12 +96,23 @@ function confirmarCancelar() {
 <template>
     <AppLayout>
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h1 class="text-2xl text-brand">Empréstimos em aberto</h1>
+            <h1 class="text-3xl font-bold text-brand">Empréstimos em aberto</h1>
             <Link href="/emprestimos/novo" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Novo empréstimo</Link>
         </div>
 
+        <form class="mb-5 flex flex-col gap-3 rounded-xl border border-stone-300 bg-white p-4 shadow-sm sm:flex-row" @submit.prevent="pesquisar">
+            <label class="flex-1">
+                <span class="mb-1 block text-sm font-semibold text-stone-800">Pesquisar empréstimos</span>
+                <input v-model="pesquisa" type="search" placeholder="Livro, código, associado ou telefone" class="min-h-12 w-full rounded-md border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-500 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20">
+            </label>
+            <div class="flex items-end gap-2">
+                <button class="min-h-12 rounded-md bg-brand px-5 py-3 text-base font-semibold text-white hover:bg-brand-dark">Pesquisar</button>
+                <button v-if="pesquisa" type="button" class="min-h-12 rounded-md border border-stone-300 px-4 py-3 text-base font-medium text-stone-800 hover:bg-stone-100" @click="limparPesquisa">Limpar</button>
+            </div>
+        </form>
+
         <div class="overflow-x-auto rounded-lg border border-stone-200 bg-white/70">
-            <table class="min-w-full text-sm">
+            <table class="min-w-full text-base">
                 <thead class="bg-stone-100 text-left">
                     <tr>
                         <th class="px-3 py-2">Livro</th>
@@ -99,16 +122,16 @@ function confirmarCancelar() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="e in emprestimos.data" :key="e.id" class="border-t border-stone-100">
-                        <td class="px-3 py-2">{{ e.livro?.titulo }} ({{ e.livro?.codigo }})</td>
-                        <td class="px-3 py-2">{{ e.associado?.nome }}</td>
-                        <td class="px-3 py-2">{{ fmt(e.data_retirada) }}</td>
-                        <td class="px-3 py-2 text-right">
+                    <tr v-for="e in emprestimos.data" :key="e.id" class="border-t-2 border-stone-200 even:bg-stone-50 hover:bg-emerald-50/60">
+                        <td class="px-4 py-3"><div class="font-semibold text-stone-900">{{ e.livro?.titulo }}</div><div class="mt-0.5 text-sm text-stone-700">Código {{ e.livro?.codigo }}</div></td>
+                        <td class="px-4 py-3"><div class="font-semibold text-stone-900">{{ e.associado?.nome }}</div><div v-if="e.associado?.telefone" class="mt-0.5 text-sm text-stone-700">{{ e.associado.telefone }}</div></td>
+                        <td class="px-4 py-3 whitespace-nowrap text-stone-800">{{ fmt(e.data_retirada) }}</td>
+                        <td class="px-4 py-3 text-right">
                             <div class="flex flex-wrap justify-end gap-2">
-                                <button class="rounded-md border border-stone-200 bg-white px-2 py-1 text-xs hover:bg-stone-50" @click="abrirDevolver(e)">
+                                <button class="min-h-10 rounded-md border-2 border-emerald-800 bg-emerald-800 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-emerald-900 focus:outline-none focus:ring-4 focus:ring-emerald-700/25" @click="abrirDevolver(e)">
                                     Devolver
                                 </button>
-                                <button class="rounded-md border border-warn/30 bg-white px-2 py-1 text-xs text-warn hover:bg-rose-50" @click="abrirCancelar(e)">
+                                <button class="min-h-10 rounded-md border border-rose-300 bg-white px-3 py-2 text-sm font-semibold text-rose-800 hover:bg-rose-50" @click="abrirCancelar(e)">
                                     Cancelar
                                 </button>
                             </div>
