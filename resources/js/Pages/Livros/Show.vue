@@ -54,7 +54,7 @@ function formatDate(value) {
                     <span v-else class="flex h-64 w-full items-center justify-center px-3 text-center text-sm text-stone-500">Sem capa disponível</span>
                 </div>
                 <div class="min-w-0">
-                    <h1 class="text-3xl font-bold leading-tight text-brand sm:text-4xl">{{ livro.titulo }}</h1>
+                    <h1 class="rounded-xl border border-emerald-800 bg-emerald-800 px-5 py-5 text-center text-3xl font-bold leading-tight text-white shadow-md sm:px-7 sm:py-6 sm:text-4xl">{{ livro.titulo }}</h1>
                     <div class="mt-3 flex flex-wrap items-center gap-2">
                         <span class="rounded-md bg-stone-100 px-3 py-1.5 text-sm font-semibold text-stone-800">Código {{ livro.codigo }}</span>
                         <span class="rounded-md px-3 py-1.5 text-sm font-bold" :class="livro.situacao === 'DISPONIVEL' ? 'bg-emerald-100 text-emerald-900' : livro.situacao === 'EMPRESTADO' ? 'bg-amber-100 text-amber-900' : 'bg-rose-100 text-rose-900'">{{ livro.situacao }}</span>
