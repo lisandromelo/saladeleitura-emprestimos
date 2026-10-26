@@ -97,7 +97,7 @@ function confirmarCancelar() {
     <AppLayout>
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
             <h1 class="text-3xl font-bold text-brand">Empréstimos em aberto</h1>
-            <Link href="/emprestimos/novo" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Novo empréstimo</Link>
+            <Link href="/" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50"><span aria-hidden="true">←</span> Voltar</Link>
         </div>
 
         <form class="mb-5 flex flex-col gap-3 rounded-xl border border-stone-300 bg-white p-4 shadow-sm sm:flex-row" @submit.prevent="pesquisar">
