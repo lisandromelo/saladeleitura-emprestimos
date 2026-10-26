@@ -56,45 +56,45 @@ function formatDate(value) {
                 <span aria-hidden="true">←</span> Voltar ao acervo
             </Link>
             <div class="grid items-start gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
-                <div class="min-w-0">
-                    <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-xl border border-stone-200 bg-stone-50 shadow-sm">
+                <section class="min-w-0 rounded-xl border border-stone-200 bg-white p-3 shadow-sm">
+                    <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
                         <button v-if="livro.capa_url" type="button" class="w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-emerald-700/30" aria-label="Ampliar capa do livro" @click="capaAmpliada = true"><img :src="livro.capa_url" alt="Capa do livro" class="h-80 w-full object-contain"></button>
                         <span v-else class="flex h-64 w-full items-center justify-center px-3 text-center text-sm text-stone-500">Sem capa disponível</span>
                     </div>
-                    <div v-if="canManage" class="mt-2 flex max-w-52 flex-wrap gap-2">
-                        <Link :href="'/livros/' + livro.id + '/editar#capa'" class="rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">Buscar/alterar capa</Link>
-                        <button v-if="livro.capa_url" type="button" class="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-500 hover:border-rose-300 hover:text-rose-700" @click="removerCapa">Remover capa</button>
+                    <div v-if="canManage" class="mt-3 flex max-w-52 flex-col gap-2">
+                        <Link :href="'/livros/' + livro.id + '/editar#capa'" class="inline-flex min-h-9 items-center justify-center rounded-md bg-emerald-800 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-emerald-900">Buscar/alterar capa</Link>
+                        <button v-if="livro.capa_url" type="button" class="inline-flex min-h-9 items-center justify-center rounded-md border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-500 hover:border-rose-300 hover:text-rose-700" @click="removerCapa">Remover capa</button>
                     </div>
-                </div>
-                <div class="min-w-0">
-                    <h1 class="rounded-xl border border-emerald-800 bg-emerald-800 px-5 py-5 text-center text-3xl font-bold leading-tight text-white shadow-md sm:px-7 sm:py-6 sm:text-4xl">{{ livro.titulo }}</h1>
+                </section>
+                <section class="min-w-0 rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
+                    <h1 class="rounded-lg border border-emerald-800 bg-emerald-800 px-5 py-5 text-center text-3xl font-bold leading-tight text-white shadow-sm sm:px-7 sm:py-6 sm:text-4xl">{{ livro.titulo }}</h1>
                     <div class="mt-3 flex flex-wrap items-center gap-2">
                         <span class="rounded-md bg-stone-100 px-3 py-1.5 text-sm font-semibold text-stone-800">Código {{ livro.codigo }}</span>
                         <span class="rounded-md px-3 py-1.5 text-sm font-bold" :class="livro.situacao === 'DISPONIVEL' ? 'bg-emerald-100 text-emerald-900' : livro.situacao === 'EMPRESTADO' ? 'bg-amber-100 text-amber-900' : 'bg-rose-100 text-rose-900'">{{ livro.situacao }}</span>
                     </div>
-                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                    <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                        <div class="rounded-lg border border-stone-200 bg-stone-50/50 p-3">
                             <dt class="text-sm font-semibold text-stone-600">Autor/Médium</dt>
                             <dd class="mt-1 text-lg font-bold text-stone-950">{{ livro.autor_medium || '—' }}</dd>
                         </div>
-                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                        <div class="rounded-lg border border-stone-200 bg-stone-50/50 p-3">
                             <dt class="text-sm font-semibold text-stone-600">Espírito</dt>
                             <dd class="mt-1 text-lg font-bold text-stone-950">{{ livro.espirito || '—' }}</dd>
                         </div>
-                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                        <div class="rounded-lg border border-stone-200 bg-stone-50/50 p-3">
                             <dt class="text-sm font-semibold text-stone-600">Classificação</dt>
                             <dd class="mt-1 text-base font-semibold text-stone-900">{{ livro.classificacao?.nome || '—' }}</dd>
                         </div>
-                        <div class="rounded-lg border border-stone-200 bg-white p-4">
+                        <div class="rounded-lg border border-stone-200 bg-stone-50/50 p-3">
                             <dt class="text-sm font-semibold text-stone-600">Entrada no acervo</dt>
                             <dd class="mt-1 text-base font-semibold text-stone-900">{{ formatDate(livro.data_entrada) }}<span v-if="livro.forma_entrada"> · {{ livro.forma_entrada }}</span></dd>
                         </div>
                     </div>
-                    <div class="mt-4 flex flex-wrap justify-end gap-2 border-t border-stone-100 pt-4">
-                        <Link href="/emprestimos/novo" class="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white">Emprestar</Link>
-                        <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar'" class="rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50">Editar</Link>
+                    <div class="mt-5 flex flex-wrap justify-end gap-2 border-t border-stone-100 pt-4">
+                        <Link href="/emprestimos/novo" class="inline-flex min-h-10 items-center rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white">Emprestar</Link>
+                        <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar'" class="inline-flex min-h-10 items-center rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50">Editar</Link>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
 
