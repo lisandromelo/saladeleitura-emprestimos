@@ -15,6 +15,8 @@ const associadoQ = ref('');
 const livroAtual = ref(null);
 const associadoAtual = ref(null);
 const mostrarCadastro = ref(false);
+const mostrarResultadosLivro = ref(false);
+const mostrarResultadosAssociado = ref(false);
 const confirmarAberto = ref(false);
 
 const form = useForm({
@@ -62,6 +64,7 @@ watch(() => props.associadoSelecionado, aplicarAssociado);
 watch(() => props.livroSelecionado, aplicarLivro);
 
 function buscarLivro() {
+    mostrarResultadosLivro.value = true;
     router.get('/emprestimos/buscar', {
         tipo: 'livro',
         q: livroQ.value,
@@ -75,6 +78,7 @@ function buscarLivro() {
 }
 
 function buscarAssociado() {
+    mostrarResultadosAssociado.value = true;
     router.get('/emprestimos/buscar', {
         tipo: 'associado',
         q: associadoQ.value,
@@ -85,35 +89,23 @@ function buscarAssociado() {
 
 function escolherLivro(item) {
     aplicarLivro(item);
-    if (props.busca?.tipo === 'livro') {
-        router.get('/emprestimos/buscar', {
-            tipo: 'livro',
-            q: '',
-            associado_id: form.associado_id || undefined,
-            livro_id: item.id,
-        }, { preserveState: true, preserveScroll: true, replace: true });
-    }
+    mostrarResultadosLivro.value = false;
 }
 
 function escolherAssociado(item) {
     aplicarAssociado(item);
-    if (props.busca?.tipo === 'associado') {
-        router.get('/emprestimos/buscar', {
-            tipo: 'associado',
-            q: '',
-            associado_id: item.id,
-            livro_id: form.livro_id || undefined,
-        }, { preserveState: true, preserveScroll: true, replace: true });
-    }
+    mostrarResultadosAssociado.value = false;
 }
 
 function limparLivro() {
+    mostrarResultadosLivro.value = false;
     livroAtual.value = null;
     form.livro_id = null;
     livroQ.value = '';
 }
 
 function limparAssociado() {
+    mostrarResultadosAssociado.value = false;
     associadoAtual.value = null;
     form.associado_id = null;
     associadoQ.value = '';
@@ -171,7 +163,7 @@ function confirmarRegistro() {
                     <input v-model="livroQ" class="min-h-12 flex-1 rounded-md border border-stone-400 bg-white px-4 py-3 text-base text-stone-900 placeholder:text-stone-500 focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20" placeholder="Digite o título do livro">
                     <button class="min-h-12 rounded-md bg-brand px-5 py-3 text-base font-semibold text-white hover:bg-brand-dark">Buscar livro</button>
                 </form>
-                <ul v-if="busca?.tipo === 'livro'" class="space-y-2 text-base">
+                <ul v-if="mostrarResultadosLivro && busca?.tipo === 'livro'" class="space-y-2 text-base">
                     <li v-for="item in busca.itens" :key="item.id">
                         <button
                             type="button"
@@ -222,7 +214,7 @@ function confirmarRegistro() {
                     </button>
                 </form>
 
-                <ul v-if="busca?.tipo === 'associado'" class="space-y-1 text-sm">
+                <ul v-if="mostrarResultadosAssociado && busca?.tipo === 'associado'" class="space-y-1 text-sm">
                     <li v-for="item in busca.itens" :key="item.id">
                         <button
                             type="button"
