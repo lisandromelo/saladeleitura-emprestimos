@@ -1,6 +1,6 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -31,6 +31,24 @@ function search() {
         incluir_baixados: incluirBaixados.value ? 1 : undefined,
     }, { preserveState: true });
 }
+
+function tratarEsc(event) {
+    if (event.key === 'Escape' && capaAmpliada.value) {
+        capaAmpliada.value = null;
+    }
+}
+
+watch(capaAmpliada, (imagem) => {
+    if (imagem) {
+        window.addEventListener('keydown', tratarEsc);
+    } else {
+        window.removeEventListener('keydown', tratarEsc);
+    }
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', tratarEsc);
+});
 </script>
 
 <template>
@@ -135,13 +153,11 @@ function search() {
             />
         </div>
 
-        <div v-if="capaAmpliada" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = null" @keydown.esc="capaAmpliada = null">
-            <div class="relative flex h-[96vh] w-[96vw] max-h-[96vh] max-w-[96vw] flex-col items-center rounded-xl bg-white p-3 shadow-2xl sm:h-[96vh] sm:w-[96vw] sm:p-4">
+        <div v-if="capaAmpliada" class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-2 sm:p-3" role="dialog" aria-modal="true" aria-label="Capa ampliada" @click.self="capaAmpliada = null">
+            <div class="relative flex max-h-[98vh] max-w-[98vw] flex-col items-center overflow-hidden rounded-lg bg-white p-2 shadow-2xl">
                 <button type="button" class="absolute right-2 top-2 z-10 rounded-full bg-stone-900 px-3 py-1 text-lg font-bold text-white hover:bg-stone-700" aria-label="Fechar imagem ampliada" @click="capaAmpliada = null">×</button>
-                <p class="mb-3 max-w-[85vw] shrink-0 pr-8 text-center text-base font-semibold text-stone-900">{{ capaAmpliada.titulo }}</p>
-                <div class="flex min-h-0 w-full flex-1 items-center justify-center">
-                    <img :src="capaAmpliada.url" alt="Capa ampliada do livro" class="h-full w-full object-contain">
-                </div>
+                <p class="mb-2 max-w-[90vw] shrink-0 pr-10 text-center text-sm font-semibold text-stone-900">{{ capaAmpliada.titulo }}</p>
+                <img :src="capaAmpliada.url" alt="Capa ampliada do livro" class="block max-h-[calc(98vh-3rem)] max-w-[98vw] h-auto w-auto object-contain">
             </div>
         </div>
     </AppLayout>
