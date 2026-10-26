@@ -55,11 +55,16 @@ function formatDate(value) {
             <Link href="/livros" class="mb-4 inline-flex min-h-10 items-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:border-emerald-700 hover:bg-emerald-50 focus:outline-none focus:ring-4 focus:ring-emerald-700/20">
                 <span aria-hidden="true">←</span> Voltar ao acervo
             </Link>
-            <div class="flex flex-wrap items-start justify-between gap-3">
-            <div class="grid gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
-                <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-xl border border-stone-200 bg-stone-50 shadow-sm">
-                    <button v-if="livro.capa_url" type="button" class="w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-emerald-700/30" aria-label="Ampliar capa do livro" @click="capaAmpliada = true"><img :src="livro.capa_url" alt="Capa do livro" class="h-80 w-full object-contain"></button>
-                    <span v-else class="flex h-64 w-full items-center justify-center px-3 text-center text-sm text-stone-500">Sem capa disponível</span>
+            <div class="grid items-start gap-6 md:grid-cols-[13rem_minmax(0,1fr)]">
+                <div class="min-w-0">
+                    <div class="flex min-h-64 w-full max-w-52 items-start justify-center overflow-hidden rounded-xl border border-stone-200 bg-stone-50 shadow-sm">
+                        <button v-if="livro.capa_url" type="button" class="w-full cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-emerald-700/30" aria-label="Ampliar capa do livro" @click="capaAmpliada = true"><img :src="livro.capa_url" alt="Capa do livro" class="h-80 w-full object-contain"></button>
+                        <span v-else class="flex h-64 w-full items-center justify-center px-3 text-center text-sm text-stone-500">Sem capa disponível</span>
+                    </div>
+                    <div v-if="canManage" class="mt-2 flex max-w-52 flex-wrap gap-2">
+                        <Link :href="'/livros/' + livro.id + '/editar#capa'" class="rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">Buscar/alterar capa</Link>
+                        <button v-if="livro.capa_url" type="button" class="rounded-md border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-500 hover:border-rose-300 hover:text-rose-700" @click="removerCapa">Remover capa</button>
+                    </div>
                 </div>
                 <div class="min-w-0">
                     <h1 class="rounded-xl border border-emerald-800 bg-emerald-800 px-5 py-5 text-center text-3xl font-bold leading-tight text-white shadow-md sm:px-7 sm:py-6 sm:text-4xl">{{ livro.titulo }}</h1>
@@ -85,14 +90,11 @@ function formatDate(value) {
                             <dd class="mt-1 text-base font-semibold text-stone-900">{{ formatDate(livro.data_entrada) }}<span v-if="livro.forma_entrada"> · {{ livro.forma_entrada }}</span></dd>
                         </div>
                     </div>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <Link href="/emprestimos/novo" class="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white">Emprestar</Link>
+                        <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar'" class="rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50">Editar</Link>
+                    </div>
                 </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar'" class="rounded-md border border-stone-300 bg-white px-3 py-2 text-sm font-semibold text-stone-800 hover:bg-stone-50">Editar</Link>
-                <Link v-if="canManage" :href="'/livros/' + livro.id + '/editar#capa'" class="rounded-md bg-emerald-800 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-900">Buscar/alterar capa</Link>
-                <button v-if="canManage && livro.capa_url" type="button" class="rounded-md border border-rose-300 bg-white px-3 py-2 text-sm font-semibold text-rose-800 hover:bg-rose-50" @click="removerCapa">Remover capa</button>
-                <Link href="/emprestimos/novo" class="rounded-md bg-brand px-3 py-2 text-sm text-white">Emprestar</Link>
-            </div>
             </div>
         </div>
 
