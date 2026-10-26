@@ -16,15 +16,29 @@ class EmprestimoController extends Controller
 {
     public function index(Request $request): Response
     {
+        $q = trim((string) $request->query('q', ''));
+
         $abertos = Emprestimo::query()
             ->with(['livro', 'associado'])
             ->aberto()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where(function ($inner) use ($q) {
+                    $inner->whereHas('livro', function ($livros) use ($q) {
+                        $livros->where('titulo', 'like', "%{$q}%")
+                            ->orWhere('codigo', 'like', "%{$q}%");
+                    })->orWhereHas('associado', function ($associados) use ($q) {
+                        $associados->where('nome', 'like', "%{$q}%")
+                            ->orWhere('telefone', 'like', "%{$q}%");
+                    });
+                });
+            })
             ->orderByDesc('data_retirada')
             ->paginate(30)
             ->withQueryString();
 
         return Inertia::render('Emprestimos/Index', [
             'emprestimos' => $abertos,
+            'filtros' => ['q' => $q],
         ]);
     }
 
